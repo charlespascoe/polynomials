@@ -57,6 +57,25 @@ class Polynomial:
 
         return ' + '.join(output)
 
+    def __add__(self, other):
+        if isinstance(other, int):
+            return Polynomial(self[0] + other, *self.coefficients[1:])
+        elif isinstance(other, Polynomial):
+            coeffs = []
+
+            for i in range(max(self.order, other.order) + 1):
+                coeffs.append(self[i] + other[i])
+
+            return Polynomial(*coeffs)
+        else:
+            raise TypeError('Only Polynomial and int can be added to a Polynomial (not {})'.format(other.__class__.__name__))
+
+    def __iadd__(self, other):
+        return self + other
+
+    def __radd__(self, other):
+        return self + other
+
 
 print(Polynomial(1, 2, 3))
 print(Polynomial())
@@ -65,3 +84,14 @@ pol1 = Polynomial(0, 1, 1, 0)
 print('f(x) = {}, order = {}, f({}) = {}'.format(pol1, pol1.order, 5, pol1(5)))
 
 print(list(pol1[0:10]))
+
+pol2 = Polynomial(0, 0, 3)
+
+pol3 = Polynomial(1, 2, 3, 4, 5)
+print('({}) + ({}) = {}'.format(pol1, pol2, pol1 + pol2))
+print('({}) + ({}) = {}'.format(pol1, 7, pol1 + 7))
+print('({}) + ({}) = {}'.format(9, pol3, 9 + pol3))
+
+pol3 += 1
+
+print(pol3)
