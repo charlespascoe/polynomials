@@ -80,6 +80,28 @@ class Polynomial:
     def __radd__(self, other):
         return self + other
 
+    def __sub__(self, other):
+        if isinstance(other, int):
+            return Polynomial(self[0] - other, *self.coefficients[1:])
+        elif isinstance(other, Polynomial):
+            coeffs = []
+
+            for i in range(max(self.order, other.order) + 1):
+                coeffs.append(self[i] - other[i])
+
+            return Polynomial(*coeffs)
+        else:
+            raise TypeError('Only a Polynomial or an int can be subtracted from a Polynomial (not {})'.format(other.__class__.__name__))
+
+    def __isub__(self, other):
+        return self - other
+
+    def __rsub__(self, other):
+        if isinstance(other, int):
+            return Polynomial(other) - self
+        else:
+            raise TypeError('Only a Polynomial or an int can be subtracted from a Polynomial (not {})'.format(other.__class__.__name__))
+
     def __mul__(self, other):
         if isinstance(other, int):
             return Polynomial(*(other * coeff for coeff in self.coefficients))
@@ -119,6 +141,8 @@ print('({}) + ({}) = {}'.format(9, pol3, 9 + pol3))
 pol3 += 1
 
 print(pol3)
+
+print('({}) - ({}) = {}'.format(pol3, Polynomial(1, 2), pol3 - Polynomial(1, 2)))
 
 pol4 = Polynomial(1, 2, 3)
 pol5 = Polynomial(4, 5, 6, 7)
