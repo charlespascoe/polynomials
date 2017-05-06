@@ -18,6 +18,17 @@ class Polynomial:
 
         return highest_expression
 
+    def __getitem__(self, items):
+        if isinstance(items, int):
+            if items < len(self.coefficients):
+                return self.coefficients[items]
+            else:
+                return 0
+        elif isinstance(items, slice):
+            return (self[i] for i in range(items.start, items.stop, items.step if items.step is not None else 1))
+        else:
+            raise TypeError('__getitem__ items must be an int or a slice')
+
     def __call__(self, x):
         result = 0
         expr = 1
@@ -46,8 +57,11 @@ class Polynomial:
 
         return ' + '.join(output)
 
+
 print(Polynomial(1, 2, 3))
 print(Polynomial())
 
 pol1 = Polynomial(0, 1, 1, 0)
 print('f(x) = {}, order = {}, f({}) = {}'.format(pol1, pol1.order, 5, pol1(5)))
+
+print(list(pol1[0:10]))
