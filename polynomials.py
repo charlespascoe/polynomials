@@ -4,6 +4,16 @@ def to_superscript(number):
     return ''.join((supers[int(d)] for d in str(number)))
 
 
+def format_coefficient(coeff, allow_one = False):
+    if coeff == 1 and not allow_one:
+        return ''
+
+    if coeff % 1 == 0:
+        return str(int(coeff))
+
+    return str(coeff)
+
+
 class Polynomial:
     def __init__(self, *coefficients):
         self.coefficients = list(coefficients)
@@ -45,21 +55,28 @@ class Polynomial:
         return result
 
     def __str__(self):
-        output = []
+        output = ''
 
-        for i in range(len(self.coefficients)):
+        first = True
+
+        for i in range(len(self.coefficients) - 1, -1, -1):
             if self.coefficients[i] != 0:
-                if i == 0:
-                    output.append(str(self.coefficients[i]))
-                else:
-                    output.append('{}x{}'.format(self.coefficients[i] if self.coefficients[i] != 1 else '', to_superscript(i) if i != 1 else ''))
+                if self.coefficients[i] < 0:
+                    output += '-' if first else ' - '
+                elif not first:
+                    output += ' + '
 
-        output.reverse()
+                first = False
+
+                if i == 0:
+                    output += format_coefficient(abs(self.coefficients[i]), True)
+                else:
+                    output += '{}x{}'.format(format_coefficient(abs(self.coefficients[i])), to_superscript(i) if i != 1 else '')
 
         if len(output) == 0:
             return '0'
 
-        return ' + '.join(output)
+        return output
 
     def __add__(self, other):
         if isinstance(other, int):
@@ -139,7 +156,7 @@ class Polynomial:
             return self / Polynomial(other)
 
 
-print(Polynomial(1, 2, 3))
+print(Polynomial(1, 2, -3))
 print(Polynomial())
 
 pol1 = Polynomial(0, 1, 1, 0)
