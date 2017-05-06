@@ -20,13 +20,11 @@ class Polynomial:
 
     @property
     def order(self):
-        highest_expression = 0
-
-        for i in range(len(self.coefficients)):
+        for i in range(len(self.coefficients) - 1, -1, -1):
             if self.coefficients[i] != 0:
-                highest_expression = i
+                return i
 
-        return highest_expression
+        return 0
 
     @staticmethod
     def single_expr(coeff, order):
