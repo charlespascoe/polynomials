@@ -122,6 +122,22 @@ class Polynomial:
     def __rmul__(self, other):
         return self * other
 
+    def __divmod__(self, other):
+        if isinstance(other, Polynomial):
+            dividendOrd = self.order
+            divisorOrd = other.order
+
+            if dividendOrd < divisorOrd:
+                return (Polynomial(), self)
+
+            quotient = Polynomial.single_expr(self[dividendOrd] / other[divisorOrd], dividendOrd - divisorOrd)
+
+            quot, rem = divmod(self - (other * quotient), other)
+
+            return (quot + quotient, rem)
+        elif isinstance(other, int):
+            return self / Polynomial(other)
+
 
 print(Polynomial(1, 2, 3))
 print(Polynomial())
@@ -150,3 +166,11 @@ pol5 = Polynomial(4, 5, 6, 7)
 print('({}) * ({}) = {}'.format(pol4, pol5, pol4 * pol5))
 
 print('{} * ({}) = {}'.format(3, pol4, 3 * pol4))
+
+print(Polynomial.single_expr(123, 5))
+
+pol6 = Polynomial(2, 1)
+pol7 = Polynomial(-10, -3, 1)
+q, r = divmod(pol7, pol6)
+
+print('({}) / ({}) = {} remainder {}'.format(pol7, pol6, q, r))
