@@ -18,6 +18,10 @@ class Polynomial:
 
         return highest_expression
 
+    @staticmethod
+    def single_expr(coeff, order):
+        return Polynomial(*(0 for _ in range(order)), coeff)
+
     def __getitem__(self, items):
         if isinstance(items, int):
             if items < len(self.coefficients):
