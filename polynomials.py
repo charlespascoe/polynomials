@@ -32,6 +32,9 @@ class Polynomial:
     def single_expr(coeff, order):
         return Polynomial(*(0 for _ in range(order)), coeff)
 
+    def __len__(self):
+        return self.order
+
     def __getitem__(self, items):
         if isinstance(items, int):
             if items < len(self.coefficients):
