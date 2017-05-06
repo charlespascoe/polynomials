@@ -68,13 +68,33 @@ class Polynomial:
 
             return Polynomial(*coeffs)
         else:
-            raise TypeError('Only Polynomial and int can be added to a Polynomial (not {})'.format(other.__class__.__name__))
+            raise TypeError('Only a Polynomial or an int can be added to a Polynomial (not {})'.format(other.__class__.__name__))
 
     def __iadd__(self, other):
         return self + other
 
     def __radd__(self, other):
         return self + other
+
+    def __mul__(self, other):
+        if isinstance(other, int):
+            return Polynomial(*(other * coeff for coeff in self.coefficients))
+        elif isinstance(other, Polynomial):
+            coeffs = [0 for _ in range(self.order + other.order + 1)]
+
+            for i in range(self.order + 1):
+                for j in range(other.order + 1):
+                    coeffs[i + j] += self[i] * other[j]
+
+            return Polynomial(*coeffs)
+        else:
+            raise TypeError('Only a Polynomial or an int can multiply a Polynomial (not {})'.format(other.__class__.__name__))
+
+    def __imul__(self, other):
+        return self * other
+
+    def __rmul__(self, other):
+        return self * other
 
 
 print(Polynomial(1, 2, 3))
@@ -95,3 +115,10 @@ print('({}) + ({}) = {}'.format(9, pol3, 9 + pol3))
 pol3 += 1
 
 print(pol3)
+
+pol4 = Polynomial(1, 2, 3)
+pol5 = Polynomial(4, 5, 6, 7)
+
+print('({}) * ({}) = {}'.format(pol4, pol5, pol4 * pol5))
+
+print('{} * ({}) = {}'.format(3, pol4, 3 * pol4))
